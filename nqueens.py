@@ -96,3 +96,72 @@ def run_branch_and_bound():
 # -------------------------------
 run_backtracking()
 run_branch_and_bound()
+
+
+# Graph Coloring using Backtracking (CSP)
+
+def add_edge(graph, edge1, edge2):
+    graph[edge1][edge2] = 1
+    graph[edge2][edge1] = 1
+
+
+def safe_to_assign(i, j, graph, v, color):
+
+    for k in range(v):
+        if graph[i][k] == 1 and color[k] == j:
+            return False
+
+    return True
+
+
+def solve(graph, m, v, i, color):
+
+    # All vertices colored
+    if i == v:
+        return True
+
+    # Try all colors
+    for j in range(m):
+
+        if safe_to_assign(i, j, graph, v, color):
+
+            color[i] = j
+
+            if solve(graph, m, v, i + 1, color):
+                return True
+
+            # Backtracking
+            color[i] = -1
+
+    return False
+
+
+def graph_coloring(graph, m, v):
+
+    color = [-1] * v
+
+    if solve(graph, m, v, 0, color):
+
+        print("Color Assignment:")
+
+        for i in range(v):
+            print("Vertex", i, "-> Color", color[i])
+
+        return True
+
+    return False
+
+
+# Driver Code
+m = 3   # Number of colors
+v = 5   # Number of vertices
+
+graph = [[0 for _ in range(v)] for _ in range(v)]
+
+add_edge(graph, 0, 1)
+add_edge(graph, 0, 2)
+add_edge(graph, 0, 3)
+add_edge(graph, 2, 4)
+
+if not graph_coloring(graph, m, v):
+    print("Solution does not exist")
